@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://hebergtonserv.com/sitemap.xml
+
+# Disallow admin areas
+Disallow: /admin/
+Disallow: /whmcs/admin/
+Disallow: /api/
+
+# Allow specific API endpoints for SEO
+Allow: /api/reviews/public

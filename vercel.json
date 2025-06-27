@@ -1,8 +1,5 @@
 {
-  "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
+  "version": 2,
   "regions": ["cdg1", "fra1"],
   "functions": {
     "app/api/**/*.ts": {
@@ -14,12 +11,16 @@
       "source": "/(.*)",
       "headers": [
         {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
           "key": "X-Frame-Options",
           "value": "DENY"
         },
         {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
         },
         {
           "key": "Referrer-Policy",
@@ -30,33 +31,61 @@
           "value": "camera=(), microphone=(), geolocation=()"
         }
       ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "https://hebergtonserv.com"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
     }
   ],
   "redirects": [
     {
-      "source": "/cgu",
-      "destination": "/terms",
+      "source": "/whmcs/clientarea.php",
+      "destination": "/client-area",
       "permanent": true
     },
     {
-      "source": "/cgv",
-      "destination": "/terms",
+      "source": "/whmcs/register.php",
+      "destination": "/register",
       "permanent": true
     },
     {
-      "source": "/mentions-legales",
-      "destination": "/legal",
+      "source": "/whmcs/login.php",
+      "destination": "/login",
       "permanent": true
     },
     {
-      "source": "/politique-confidentialite",
-      "destination": "/privacy",
+      "source": "/old-hosting",
+      "destination": "/hosting",
       "permanent": true
     }
   ],
-  "env": {
-    "NEXT_PUBLIC_APP_URL": "https://hebergtonserv.com",
-    "NEXT_PUBLIC_APP_NAME": "HebergTonServ",
-    "NEXT_PUBLIC_COMPANY_NAME": "HebergTonServ SAS"
-  }
+  "rewrites": [
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/cleanup",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/backup",
+      "schedule": "0 3 * * 0"
+    }
+  ]
 }

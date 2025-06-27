@@ -1,0 +1,96 @@
+{
+  "navigation": {
+    "home": "Accueil",
+    "webHosting": "Hébergement Web",
+    "vps": "Serveurs VPS",
+    "fivem": "Serveurs FiveM",
+    "dedicated": "Serveurs Dédiés",
+    "domains": "Domaines",
+    "support": "Support",
+    "myAccount": "Mon Compte",
+    "clientArea": "Espace Client",
+    "login": "Connexion",
+    "register": "Créer un compte",
+    "order": "Commander"
+  },
+  "hero": {
+    "title": "Hébergement Web & Gaming Professionnel",
+    "subtitle": "Solutions haute performance pour vos projets web et serveurs de jeu. Infrastructure française, support 24/7 et garantie de disponibilité 99.9%.",
+    "cta": "Découvrir nos offres",
+    "learnMore": "En savoir plus"
+  },
+  "services": {
+    "title": "Nos Services",
+    "subtitle": "Une gamme complète de services pour répondre à tous vos besoins en ligne",
+    "webHosting": {
+      "title": "Hébergement Web",
+      "description": "Hébergement partagé, VPS et serveurs dédiés avec une performance exceptionnelle",
+      "features": ["SSD NVMe", "Bande passante illimitée", "SSL gratuit", "Panneau de contrôle cPanel"]
+    },
+    "domains": {
+      "title": "Noms de Domaine",
+      "description": "Enregistrement et gestion de domaines avec plus de 500 extensions disponibles",
+      "features": ["Protection WHOIS", "DNS géré", "Transfert gratuit", "Renouvellement automatique"]
+    },
+    "databases": {
+      "title": "Bases de Données",
+      "description": "Solutions de bases de données MySQL, PostgreSQL et MongoDB managées",
+      "features": ["Sauvegardes automatiques", "Haute disponibilité", "Monitoring 24/7", "Scaling automatique"]
+    },
+    "email": {
+      "title": "Email Professionnel",
+      "description": "Comptes email professionnels avec votre nom de domaine",
+      "features": ["Webmail moderne", "Anti-spam avancé", "Synchronisation mobile", "Stockage généreux"]
+    },
+    "security": {
+      "title": "Sécurité Web",
+      "description": "Protection complète contre les menaces en ligne",
+      "features": ["Firewall WAF", "Protection DDoS", "Scan de malware", "Certificats SSL"]
+    },
+    "development": {
+      "title": "Développement",
+      "description": "Outils et environnements pour développeurs",
+      "features": ["Git intégré", "Staging automatique", "CI/CD", "Support multi-langages"]
+    }
+  },
+  "pricing": {
+    "title": "Tarifs Transparents",
+    "subtitle": "Choisissez le plan qui correspond à vos besoins. Tous nos plans incluent une garantie de remboursement de 30 jours.",
+    "popular": "Plus populaire",
+    "month": "/mois",
+    "choosePlan": "Choisir ce plan",
+    "customSolution": "Besoin d'une solution sur mesure ?",
+    "contactSales": "Contactez notre équipe commerciale"
+  },
+  "footer": {
+    "company": "Entreprise",
+    "services": "Services",
+    "support": "Support",
+    "legal": "Légal",
+    "followUs": "Suivez-nous",
+    "newsletter": "Newsletter",
+    "newsletterText": "Restez informé de nos dernières offres et actualités",
+    "subscribe": "S'abonner",
+    "copyright": "© 2024 HebergTonServ. Tous droits réservés."
+  },
+  "auth": {
+    "login": "Connexion",
+    "register": "Créer un compte",
+    "email": "Adresse email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "city": "Ville",
+    "country": "Pays",
+    "rememberMe": "Se souvenir de moi",
+    "forgotPassword": "Mot de passe oublié ?",
+    "acceptTerms": "J'accepte les conditions d'utilisation",
+    "acceptNewsletter": "Je souhaite recevoir les actualités",
+    "alreadyAccount": "Déjà client ?",
+    "noAccount": "Pas encore client ?",
+    "createAccount": "Créer mon compte"
+  }
+}

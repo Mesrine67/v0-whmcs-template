@@ -1,0 +1,96 @@
+{
+  "navigation": {
+    "home": "Home",
+    "webHosting": "Web Hosting",
+    "vps": "VPS Servers",
+    "fivem": "FiveM Servers",
+    "dedicated": "Dedicated Servers",
+    "domains": "Domains",
+    "support": "Support",
+    "myAccount": "My Account",
+    "clientArea": "Client Area",
+    "login": "Login",
+    "register": "Sign Up",
+    "order": "Order"
+  },
+  "hero": {
+    "title": "Professional Web & Gaming Hosting",
+    "subtitle": "High-performance solutions for your web projects and game servers. French infrastructure, 24/7 support and 99.9% uptime guarantee.",
+    "cta": "Discover our offers",
+    "learnMore": "Learn more"
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "A complete range of services to meet all your online needs",
+    "webHosting": {
+      "title": "Web Hosting",
+      "description": "Shared hosting, VPS and dedicated servers with exceptional performance",
+      "features": ["NVMe SSD", "Unlimited bandwidth", "Free SSL", "cPanel control panel"]
+    },
+    "domains": {
+      "title": "Domain Names",
+      "description": "Domain registration and management with over 500 extensions available",
+      "features": ["WHOIS protection", "Managed DNS", "Free transfer", "Auto-renewal"]
+    },
+    "databases": {
+      "title": "Databases",
+      "description": "Managed MySQL, PostgreSQL and MongoDB database solutions",
+      "features": ["Automatic backups", "High availability", "24/7 monitoring", "Auto-scaling"]
+    },
+    "email": {
+      "title": "Professional Email",
+      "description": "Professional email accounts with your domain name",
+      "features": ["Modern webmail", "Advanced anti-spam", "Mobile sync", "Generous storage"]
+    },
+    "security": {
+      "title": "Web Security",
+      "description": "Complete protection against online threats",
+      "features": ["WAF Firewall", "DDoS protection", "Malware scan", "SSL certificates"]
+    },
+    "development": {
+      "title": "Development",
+      "description": "Tools and environments for developers",
+      "features": ["Integrated Git", "Auto staging", "CI/CD", "Multi-language support"]
+    }
+  },
+  "pricing": {
+    "title": "Transparent Pricing",
+    "subtitle": "Choose the plan that fits your needs. All our plans include a 30-day money-back guarantee.",
+    "popular": "Most popular",
+    "month": "/month",
+    "choosePlan": "Choose this plan",
+    "customSolution": "Need a custom solution?",
+    "contactSales": "Contact our sales team"
+  },
+  "footer": {
+    "company": "Company",
+    "services": "Services",
+    "support": "Support",
+    "legal": "Legal",
+    "followUs": "Follow us",
+    "newsletter": "Newsletter",
+    "newsletterText": "Stay informed about our latest offers and news",
+    "subscribe": "Subscribe",
+    "copyright": "© 2024 HebergTonServ. All rights reserved."
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Sign Up",
+    "email": "Email address",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "acceptTerms": "I accept the terms of use",
+    "acceptNewsletter": "I want to receive news",
+    "alreadyAccount": "Already a customer?",
+    "noAccount": "Not a customer yet?",
+    "createAccount": "Create my account"
+  }
+}

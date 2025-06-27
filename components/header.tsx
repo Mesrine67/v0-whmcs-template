@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useTranslations } from "next-intl"
 import { Menu, User, ShoppingCart, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -12,18 +13,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { LanguageSwitcher } from "@/components/language-switcher"
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false)
+  const t = useTranslations()
 
   const navigation = [
-    { name: "Accueil", href: "/" },
-    { name: "Hébergement Web", href: "/hosting" },
-    { name: "Serveurs VPS", href: "/vps" },
-    { name: "Serveurs FiveM", href: "/fivem" },
-    { name: "Serveurs Dédiés", href: "/dedicated" },
-    { name: "Domaines", href: "/domains" },
-    { name: "Support", href: "/support" },
+    { name: t("navigation.home"), href: "/" },
+    { name: t("navigation.webHosting"), href: "/hosting" },
+    { name: t("navigation.vps"), href: "/vps" },
+    { name: t("navigation.fivem"), href: "/fivem" },
+    { name: t("navigation.dedicated"), href: "/dedicated" },
+    { name: t("navigation.domains"), href: "/domains" },
+    { name: t("navigation.support"), href: "/support" },
   ]
 
   return (
@@ -68,24 +71,27 @@ export function Header() {
         </nav>
 
         <div className="flex items-center space-x-4">
+          {/* Language Switcher */}
+          <LanguageSwitcher />
+
           {/* Menu Compte */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="hidden md:flex">
                 <User className="h-4 w-4 mr-2" />
-                Mon Compte
+                {t("navigation.myAccount")}
                 <ChevronDown className="h-4 w-4 ml-2" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuItem asChild>
-                <Link href="/client-area">Espace Client</Link>
+                <Link href="/client-area">{t("navigation.clientArea")}</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/login">Connexion</Link>
+                <Link href="/login">{t("navigation.login")}</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href="/register">Créer un compte</Link>
+                <Link href="/register">{t("navigation.register")}</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
@@ -100,7 +106,7 @@ export function Header() {
           <Button size="sm" className="bg-blue-600 hover:bg-blue-700" asChild>
             <Link href="/whmcs/cart.php">
               <ShoppingCart className="h-4 w-4 mr-2" />
-              Commander
+              {t("navigation.order")}
             </Link>
           </Button>
 
@@ -125,14 +131,17 @@ export function Header() {
                 ))}
                 <div className="border-t pt-4 space-y-2">
                   <Link href="/client-area" className="block text-sm font-medium">
-                    Espace Client
+                    {t("navigation.clientArea")}
                   </Link>
                   <Link href="/login" className="block text-sm font-medium">
-                    Connexion
+                    {t("navigation.login")}
                   </Link>
                   <Link href="/register" className="block text-sm font-medium">
-                    Créer un compte
+                    {t("navigation.register")}
                   </Link>
+                </div>
+                <div className="border-t pt-4">
+                  <LanguageSwitcher />
                 </div>
               </div>
             </SheetContent>
