@@ -4,13 +4,14 @@ import type React from "react"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Eye, EyeOff, Lock, Mail, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Eye, EyeOff, Lock, Mail, ArrowRight } from "lucide-react"
 import Link from "next/link"
+import Loader2 from "@/components/ui/loader2" // Import Loader2 component
 
 export default function LoginPageClient() {
   const [email, setEmail] = useState("")
@@ -35,17 +36,16 @@ export default function LoginPageClient() {
         body: JSON.stringify({
           email,
           password,
-          rememberme: rememberMe,
+          rememberMe,
         }),
       })
 
       const data = await response.json()
 
-      if (response.ok && data.success) {
-        // Redirection vers l'espace client
+      if (response.ok) {
         router.push("/client-area")
       } else {
-        setError(data.message || "Erreur de connexion")
+        setError(data.error || "Erreur de connexion")
       }
     } catch (err) {
       setError("Erreur de connexion au serveur")
@@ -55,25 +55,21 @@ export default function LoginPageClient() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <div className="flex items-center justify-center mb-4">
-            <div className="bg-blue-600 p-3 rounded-full">
-              <User className="h-6 w-6 text-white" />
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+        <CardHeader className="space-y-1 text-center">
+          <div className="mx-auto w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-4">
+            <Lock className="w-6 h-6 text-white" />
           </div>
-          <CardTitle className="text-2xl font-bold text-center">Connexion</CardTitle>
-          <CardDescription className="text-center">Connectez-vous à votre espace client HebergTonServ</CardDescription>
+          <CardTitle className="text-2xl font-bold text-gray-900">Connexion</CardTitle>
+          <CardDescription className="text-gray-600">Accédez à votre espace client HebergTonServ</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <form onSubmit={handleSubmit} className="space-y-4">
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">{error}</div>
-            )}
-
             <div className="space-y-2">
-              <Label htmlFor="email">Adresse email</Label>
+              <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                Adresse email
+              </Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
@@ -82,23 +78,25 @@ export default function LoginPageClient() {
                   placeholder="votre@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Mot de passe</Label>
+              <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                Mot de passe
+              </Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Votre mot de passe"
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 pr-10"
+                  className="pl-10 pr-10 h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
                   required
                 />
                 <button
@@ -118,24 +116,35 @@ export default function LoginPageClient() {
                   checked={rememberMe}
                   onCheckedChange={(checked) => setRememberMe(checked as boolean)}
                 />
-                <Label htmlFor="remember" className="text-sm">
+                <Label htmlFor="remember" className="text-sm text-gray-600">
                   Se souvenir de moi
                 </Label>
               </div>
-              <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+              <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-800 hover:underline">
                 Mot de passe oublié ?
               </Link>
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            {error && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium"
+              disabled={isLoading}
+            >
+              {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <ArrowRight className="w-4 h-4 mr-2" />}
               {isLoading ? "Connexion..." : "Se connecter"}
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
+          <div className="text-center pt-4 border-t border-gray-200">
             <p className="text-sm text-gray-600">
               Pas encore de compte ?{" "}
-              <Link href="/register" className="text-blue-600 hover:underline font-medium">
+              <Link href="/register" className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
                 Créer un compte
               </Link>
             </p>

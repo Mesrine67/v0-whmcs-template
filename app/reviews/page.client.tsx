@@ -2,40 +2,63 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
-import { Star, ThumbsUp, ThumbsDown, MessageCircle, Search } from "lucide-react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-
-interface Review {
-  id: string
-  author: string
-  rating: number
-  date: string
-  title: string
-  content: string
-  service: string
-  helpful: number
-  notHelpful: number
-  response?: {
-    author: string
-    date: string
-    content: string
-  }
-}
+import { Badge } from "@/components/ui/badge"
+import { Star, Search, ThumbsUp, ThumbsDown, MessageCircle } from "lucide-react"
 
 export default function ReviewsPageClient() {
-  const [reviews, setReviews] = useState<Review[]>([])
-  const [filteredReviews, setFilteredReviews] = useState<Review[]>([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [filterRating, setFilterRating] = useState("all")
-  const [filterService, setFilterService] = useState("all")
-  const [isLoading, setIsLoading] = useState(true)
-  const [showReviewForm, setShowReviewForm] = useState(false)
+  const [reviews, setReviews] = useState([
+    {
+      id: 1,
+      author: "Jean D.",
+      rating: 5,
+      title: "Excellent service !",
+      content:
+        "Service client réactif et serveurs très performants. Je recommande vivement HebergTonServ pour tous vos besoins d'hébergement.",
+      date: "2024-01-15",
+      service: "Serveur Web Premium",
+      helpful: 12,
+      notHelpful: 1,
+      response: {
+        author: "Équipe HebergTonServ",
+        content: "Merci Jean pour ce retour positif ! Nous sommes ravis que nos services vous donnent satisfaction.",
+        date: "2024-01-16",
+      },
+    },
+    {
+      id: 2,
+      author: "Marie L.",
+      rating: 4,
+      title: "Très bon rapport qualité/prix",
+      content: "Serveur stable et prix compétitif. Quelques petits ralentissements parfois mais rien de grave.",
+      date: "2024-01-10",
+      service: "Serveur FiveM",
+      helpful: 8,
+      notHelpful: 2,
+      response: null,
+    },
+    {
+      id: 3,
+      author: "Pierre M.",
+      rating: 5,
+      title: "Support technique au top",
+      content: "J'ai eu un problème technique et l'équipe support a résolu le problème en moins de 2 heures. Bravo !",
+      date: "2024-01-08",
+      service: "Serveur Minecraft",
+      helpful: 15,
+      notHelpful: 0,
+      response: {
+        author: "Équipe HebergTonServ",
+        content: "Merci Pierre ! Notre équipe technique est toujours là pour vous aider rapidement.",
+        date: "2024-01-08",
+      },
+    },
+  ])
+
   const [newReview, setNewReview] = useState({
     rating: 5,
     title: "",
@@ -43,434 +66,256 @@ export default function ReviewsPageClient() {
     service: "",
   })
 
-  const [stats, setStats] = useState({
-    averageRating: 4.6,
-    totalReviews: 0,
-    distribution: {
-      5: 0,
-      4: 0,
-      3: 0,
-      2: 0,
-      1: 0,
-    },
+  const [searchTerm, setSearchTerm] = useState("")
+  const [filterRating, setFilterRating] = useState(0)
+  const [showReviewForm, setShowReviewForm] = useState(false)
+
+  const averageRating = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length
+  const ratingDistribution = [5, 4, 3, 2, 1].map((rating) => ({
+    rating,
+    count: reviews.filter((review) => review.rating === rating).length,
+    percentage: (reviews.filter((review) => review.rating === rating).length / reviews.length) * 100,
+  }))
+
+  const filteredReviews = reviews.filter((review) => {
+    const matchesSearch =
+      review.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      review.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      review.author.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesRating = filterRating === 0 || review.rating === filterRating
+    return matchesSearch && matchesRating
   })
 
-  useEffect(() => {
-    loadReviews()
-  }, [])
-
-  useEffect(() => {
-    filterReviews()
-  }, [reviews, searchTerm, filterRating, filterService])
-
-  const loadReviews = async () => {
-    try {
-      // Simuler le chargement des avis
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      const mockReviews: Review[] = [
-        {
-          id: "1",
-          author: "Marie L.",
-          rating: 5,
-          date: "2024-01-15",
-          title: "Excellent service d'hébergement",
-          content:
-            "Je suis très satisfaite du service. Le support est réactif et les performances sont au rendez-vous. Je recommande vivement HebergTonServ !",
-          service: "Hébergement Web",
-          helpful: 12,
-          notHelpful: 1,
-          response: {
-            author: "Équipe HebergTonServ",
-            date: "2024-01-16",
-            content: "Merci Marie pour ce retour positif ! Nous sommes ravis que notre service vous satisfasse.",
-          },
-        },
-        {
-          id: "2",
-          author: "Thomas K.",
-          rating: 4,
-          date: "2024-01-10",
-          title: "Bon rapport qualité-prix",
-          content:
-            "Service correct avec un bon rapport qualité-prix. Quelques petites coupures mais rien de dramatique. Le support répond rapidement.",
-          service: "Serveur VPS",
-          helpful: 8,
-          notHelpful: 2,
-        },
-        {
-          id: "3",
-          author: "Sophie M.",
-          rating: 5,
-          date: "2024-01-08",
-          title: "Parfait pour mon serveur FiveM",
-          content:
-            "Mon serveur FiveM tourne parfaitement depuis 6 mois. Aucun lag, excellent uptime. L'équipe technique est très compétente.",
-          service: "Serveur FiveM",
-          helpful: 15,
-          notHelpful: 0,
-          response: {
-            author: "Équipe HebergTonServ",
-            date: "2024-01-09",
-            content:
-              "Merci Sophie ! Nous sommes fiers de pouvoir offrir une expérience optimale pour les serveurs FiveM.",
-          },
-        },
-        {
-          id: "4",
-          author: "Lucas R.",
-          rating: 3,
-          date: "2024-01-05",
-          title: "Service moyen",
-          content:
-            "Le service fonctionne mais j'ai eu quelques problèmes de configuration au début. Le support a fini par résoudre mais cela a pris du temps.",
-          service: "Hébergement Web",
-          helpful: 5,
-          notHelpful: 3,
-        },
-        {
-          id: "5",
-          author: "Emma D.",
-          rating: 5,
-          date: "2024-01-03",
-          title: "Je recommande !",
-          content:
-            "Très bon service, interface claire et intuitive. Les prix sont compétitifs et la qualité est au rendez-vous.",
-          service: "Serveur VPS",
-          helpful: 10,
-          notHelpful: 1,
-        },
-      ]
-
-      setReviews(mockReviews)
-
-      // Calculer les statistiques
-      const total = mockReviews.length
-      const sum = mockReviews.reduce((acc, review) => acc + review.rating, 0)
-      const average = sum / total
-
-      const distribution = mockReviews.reduce(
-        (acc, review) => {
-          acc[review.rating as keyof typeof acc]++
-          return acc
-        },
-        { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
-      )
-
-      setStats({
-        averageRating: Math.round(average * 10) / 10,
-        totalReviews: total,
-        distribution,
-      })
-    } catch (error) {
-      console.error("Erreur lors du chargement des avis:", error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const filterReviews = () => {
-    let filtered = reviews
-
-    if (searchTerm) {
-      filtered = filtered.filter(
-        (review) =>
-          review.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          review.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          review.author.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-    }
-
-    if (filterRating !== "all") {
-      filtered = filtered.filter((review) => review.rating === Number.parseInt(filterRating))
-    }
-
-    if (filterService !== "all") {
-      filtered = filtered.filter((review) => review.service === filterService)
-    }
-
-    setFilteredReviews(filtered)
-  }
-
-  const renderStars = (rating: number, size: "sm" | "md" | "lg" = "md") => {
-    const sizeClasses = {
-      sm: "h-4 w-4",
-      md: "h-5 w-5",
-      lg: "h-6 w-6",
-    }
-
+  const renderStars = (rating: number, interactive = false, onRatingChange?: (rating: number) => void) => {
     return (
-      <div className="flex">
+      <div className="flex space-x-1">
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
-            className={`${sizeClasses[size]} ${star <= rating ? "text-yellow-400 fill-current" : "text-gray-300"}`}
+            className={`w-5 h-5 ${
+              star <= rating ? "text-yellow-400 fill-current" : "text-gray-300"
+            } ${interactive ? "cursor-pointer hover:text-yellow-400" : ""}`}
+            onClick={() => interactive && onRatingChange && onRatingChange(star)}
           />
         ))}
       </div>
     )
   }
 
-  const handleSubmitReview = async (e: React.FormEvent) => {
+  const handleSubmitReview = (e: React.FormEvent) => {
     e.preventDefault()
-    // Ici, vous ajouteriez la logique pour soumettre l'avis
-    console.log("Nouvel avis:", newReview)
-    setShowReviewForm(false)
+    const review = {
+      id: reviews.length + 1,
+      author: "Vous",
+      rating: newReview.rating,
+      title: newReview.title,
+      content: newReview.content,
+      date: new Date().toISOString().split("T")[0],
+      service: newReview.service,
+      helpful: 0,
+      notHelpful: 0,
+      response: null,
+    }
+    setReviews([review, ...reviews])
     setNewReview({ rating: 5, title: "", content: "", service: "" })
-  }
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement des avis clients...</p>
-        </div>
-      </div>
-    )
+    setShowReviewForm(false)
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-6">
-            <h1 className="text-3xl font-bold text-gray-900">Avis Clients</h1>
-            <p className="text-gray-600 mt-2">Découvrez ce que nos clients pensent de nos services</p>
+          <div className="py-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Avis Clients</h1>
+            <p className="text-gray-600">Découvrez ce que nos clients pensent de nos services</p>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Statistiques globales */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle>Note Globale</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center space-x-4">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar avec statistiques */}
+          <div className="lg:col-span-1 space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Note globale</CardTitle>
+              </CardHeader>
+              <CardContent>
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-yellow-600">{stats.averageRating}</div>
-                  {renderStars(Math.round(stats.averageRating), "lg")}
-                  <p className="text-sm text-gray-600 mt-1">{stats.totalReviews} avis</p>
+                  <div className="text-4xl font-bold text-yellow-600 mb-2">{averageRating.toFixed(1)}</div>
+                  {renderStars(Math.round(averageRating))}
+                  <p className="text-sm text-gray-600 mt-2">Basé sur {reviews.length} avis</p>
                 </div>
-                <div className="flex-1 space-y-2">
-                  {[5, 4, 3, 2, 1].map((rating) => (
+                <div className="mt-6 space-y-2">
+                  {ratingDistribution.map(({ rating, count, percentage }) => (
                     <div key={rating} className="flex items-center space-x-2">
-                      <span className="text-sm w-8">{rating}★</span>
+                      <span className="text-sm w-3">{rating}</span>
+                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
                       <div className="flex-1 bg-gray-200 rounded-full h-2">
-                        <div
-                          className="bg-yellow-400 h-2 rounded-full"
-                          style={{
-                            width: `${(stats.distribution[rating as keyof typeof stats.distribution] / stats.totalReviews) * 100}%`,
-                          }}
-                        />
+                        <div className="bg-yellow-400 h-2 rounded-full" style={{ width: `${percentage}%` }} />
                       </div>
-                      <span className="text-sm text-gray-600 w-8">
-                        {stats.distribution[rating as keyof typeof stats.distribution]}
-                      </span>
+                      <span className="text-sm text-gray-600 w-8">{count}</span>
                     </div>
                   ))}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Laisser un Avis</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Button className="w-full" onClick={() => setShowReviewForm(!showReviewForm)}>
-                <MessageCircle className="h-4 w-4 mr-2" />
-                Écrire un avis
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Formulaire d'avis */}
-        {showReviewForm && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Votre Avis</CardTitle>
-              <CardDescription>Partagez votre expérience avec nos services</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmitReview} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Note</label>
-                    <div className="flex space-x-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          type="button"
-                          onClick={() => setNewReview((prev) => ({ ...prev, rating: star }))}
-                          className="focus:outline-none"
-                        >
-                          <Star
-                            className={`h-6 w-6 ${
-                              star <= newReview.rating ? "text-yellow-400 fill-current" : "text-gray-300"
-                            }`}
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Service</label>
-                    <Select
-                      value={newReview.service}
-                      onValueChange={(value) => setNewReview((prev) => ({ ...prev, service: value }))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner un service" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Hébergement Web">Hébergement Web</SelectItem>
-                        <SelectItem value="Serveur VPS">Serveur VPS</SelectItem>
-                        <SelectItem value="Serveur FiveM">Serveur FiveM</SelectItem>
-                        <SelectItem value="Support">Support</SelectItem>
-                      </SelectContent>
-                    </Select>
+            <Card>
+              <CardHeader>
+                <CardTitle>Filtres</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Rechercher</label>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Input
+                      placeholder="Rechercher dans les avis..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10"
+                    />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Titre</label>
-                  <Input
-                    value={newReview.title}
-                    onChange={(e) => setNewReview((prev) => ({ ...prev, title: e.target.value }))}
-                    placeholder="Résumez votre expérience"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Commentaire</label>
-                  <Textarea
-                    value={newReview.content}
-                    onChange={(e) => setNewReview((prev) => ({ ...prev, content: e.target.value }))}
-                    placeholder="Décrivez votre expérience en détail"
-                    rows={4}
-                    required
-                  />
-                </div>
-                <div className="flex space-x-2">
-                  <Button type="submit">Publier l'avis</Button>
-                  <Button type="button" variant="outline" onClick={() => setShowReviewForm(false)}>
-                    Annuler
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Filtres et recherche */}
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    placeholder="Rechercher dans les avis..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              <Select value={filterRating} onValueChange={setFilterRating}>
-                <SelectTrigger className="w-full md:w-48">
-                  <SelectValue placeholder="Filtrer par note" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Toutes les notes</SelectItem>
-                  <SelectItem value="5">5 étoiles</SelectItem>
-                  <SelectItem value="4">4 étoiles</SelectItem>
-                  <SelectItem value="3">3 étoiles</SelectItem>
-                  <SelectItem value="2">2 étoiles</SelectItem>
-                  <SelectItem value="1">1 étoile</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={filterService} onValueChange={setFilterService}>
-                <SelectTrigger className="w-full md:w-48">
-                  <SelectValue placeholder="Filtrer par service" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tous les services</SelectItem>
-                  <SelectItem value="Hébergement Web">Hébergement Web</SelectItem>
-                  <SelectItem value="Serveur VPS">Serveur VPS</SelectItem>
-                  <SelectItem value="Serveur FiveM">Serveur FiveM</SelectItem>
-                  <SelectItem value="Support">Support</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Liste des avis */}
-        <div className="space-y-6">
-          {filteredReviews.map((review) => (
-            <Card key={review.id}>
-              <CardContent className="pt-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <div className="flex items-center space-x-2 mb-2">
-                      {renderStars(review.rating)}
-                      <Badge variant="secondary">{review.service}</Badge>
-                    </div>
-                    <h3 className="font-semibold text-lg">{review.title}</h3>
-                    <p className="text-sm text-gray-600">
-                      Par {review.author} • {new Date(review.date).toLocaleDateString("fr-FR")}
-                    </p>
-                  </div>
-                </div>
-
-                <p className="text-gray-700 mb-4">{review.content}</p>
-
-                {review.response && (
-                  <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
-                    <div className="flex items-center mb-2">
-                      <Badge variant="outline" className="bg-blue-100 text-blue-800">
-                        Réponse officielle
-                      </Badge>
-                      <span className="text-sm text-gray-600 ml-2">
-                        {review.response.author} • {new Date(review.response.date).toLocaleDateString("fr-FR")}
-                      </span>
-                    </div>
-                    <p className="text-gray-700">{review.response.content}</p>
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <button className="flex items-center space-x-1 text-sm text-gray-600 hover:text-green-600">
-                      <ThumbsUp className="h-4 w-4" />
-                      <span>Utile ({review.helpful})</span>
-                    </button>
-                    <button className="flex items-center space-x-1 text-sm text-gray-600 hover:text-red-600">
-                      <ThumbsDown className="h-4 w-4" />
-                      <span>Pas utile ({review.notHelpful})</span>
-                    </button>
-                  </div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Filtrer par note</label>
+                  <select
+                    value={filterRating}
+                    onChange={(e) => setFilterRating(Number(e.target.value))}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  >
+                    <option value={0}>Toutes les notes</option>
+                    <option value={5}>5 étoiles</option>
+                    <option value={4}>4 étoiles</option>
+                    <option value={3}>3 étoiles</option>
+                    <option value={2}>2 étoiles</option>
+                    <option value={1}>1 étoile</option>
+                  </select>
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
+          </div>
 
-        {filteredReviews.length === 0 && (
-          <Card>
-            <CardContent className="text-center py-12">
-              <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Aucun avis trouvé</h3>
-              <p className="text-gray-600">Aucun avis ne correspond à vos critères de recherche.</p>
-            </CardContent>
-          </Card>
-        )}
+          {/* Liste des avis */}
+          <div className="lg:col-span-3 space-y-6">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold">
+                {filteredReviews.length} avis trouvé{filteredReviews.length > 1 ? "s" : ""}
+              </h2>
+              <Button onClick={() => setShowReviewForm(!showReviewForm)}>
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Laisser un avis
+              </Button>
+            </div>
+
+            {showReviewForm && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Laisser un avis</CardTitle>
+                  <CardDescription>Partagez votre expérience avec nos services</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleSubmitReview} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Note</label>
+                      {renderStars(newReview.rating, true, (rating) => setNewReview({ ...newReview, rating }))}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Service concerné</label>
+                      <select
+                        value={newReview.service}
+                        onChange={(e) => setNewReview({ ...newReview, service: e.target.value })}
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        required
+                      >
+                        <option value="">Sélectionner un service</option>
+                        <option value="Serveur Web Premium">Serveur Web Premium</option>
+                        <option value="Serveur FiveM">Serveur FiveM</option>
+                        <option value="Serveur Minecraft">Serveur Minecraft</option>
+                        <option value="Support technique">Support technique</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Titre de l'avis</label>
+                      <Input
+                        value={newReview.title}
+                        onChange={(e) => setNewReview({ ...newReview, title: e.target.value })}
+                        placeholder="Résumez votre expérience..."
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Votre avis détaillé</label>
+                      <Textarea
+                        value={newReview.content}
+                        onChange={(e) => setNewReview({ ...newReview, content: e.target.value })}
+                        placeholder="Décrivez votre expérience en détail..."
+                        rows={4}
+                        required
+                      />
+                    </div>
+                    <div className="flex space-x-4">
+                      <Button type="submit">Publier l'avis</Button>
+                      <Button type="button" variant="outline" onClick={() => setShowReviewForm(false)}>
+                        Annuler
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            )}
+
+            <div className="space-y-6">
+              {filteredReviews.map((review) => (
+                <Card key={review.id}>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <div className="flex items-center space-x-2 mb-2">
+                          {renderStars(review.rating)}
+                          <Badge variant="outline">{review.service}</Badge>
+                        </div>
+                        <CardTitle className="text-lg">{review.title}</CardTitle>
+                        <CardDescription>
+                          Par {review.author} • {review.date}
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <p className="text-gray-700">{review.content}</p>
+
+                    {review.response && (
+                      <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <Badge className="bg-blue-100 text-blue-800">Réponse officielle</Badge>
+                          <span className="text-sm text-gray-600">{review.response.date}</span>
+                        </div>
+                        <p className="text-gray-700 mb-2">{review.response.content}</p>
+                        <p className="text-sm font-medium text-blue-800">— {review.response.author}</p>
+                      </div>
+                    )}
+
+                    <div className="flex items-center justify-between pt-4 border-t">
+                      <div className="flex items-center space-x-4">
+                        <button className="flex items-center space-x-1 text-gray-600 hover:text-green-600">
+                          <ThumbsUp className="w-4 h-4" />
+                          <span className="text-sm">{review.helpful}</span>
+                        </button>
+                        <button className="flex items-center space-x-1 text-gray-600 hover:text-red-600">
+                          <ThumbsDown className="w-4 h-4" />
+                          <span className="text-sm">{review.notHelpful}</span>
+                        </button>
+                      </div>
+                      <span className="text-sm text-gray-500">Cet avis vous a-t-il été utile ?</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
