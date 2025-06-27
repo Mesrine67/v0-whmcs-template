@@ -1,0 +1,33 @@
+{
+  "navigation": {
+    "home": "Startseite",
+    "webHosting": "Web-Hosting",
+    "vps": "VPS-Server",
+    "fivem": "FiveM-Server",
+    "dedicated": "Dedicated Server",
+    "domains": "Domains",
+    "support": "Support",
+    "myAccount": "Mein Konto",
+    "clientArea": "Kundenbereich",
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "order": "Bestellen"
+  },
+  "hero": {
+    "title": "Professionelles Web- & Gaming-Hosting",
+    "subtitle": "Hochleistungslösungen für Ihre Webprojekte und Spielserver. Französische Infrastruktur, 24/7-Support und 99,9% Verfügbarkeitsgarantie.",
+    "cta": "Unsere Angebote entdecken",
+    "learnMore": "Mehr erfahren"
+  },
+  "services": {
+    "title": "Unsere Dienstleistungen",
+    "subtitle": "Ein komplettes Spektrum an Dienstleistungen für alle Ihre Online-Bedürfnisse"
+  },
+  "pricing": {
+    "title": "Transparente Preise",
+    "subtitle": "Wählen Sie den Plan, der Ihren Bedürfnissen entspricht. Alle unsere Pläne beinhalten eine 30-tägige Geld-zurück-Garantie.",
+    "popular": "Am beliebtesten",
+    "month": "/Monat",
+    "choosePlan": "Diesen Plan wählen"
+  }
+}
