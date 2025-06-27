@@ -1,6 +1,3 @@
-// tells Next.js this page must be rendered on-demand
-export const dynamic = "force-dynamic"
-
 import { Header } from "@/components/header"
 import { HeroSection } from "@/components/hero-section"
 import { ServicesSection } from "@/components/services-section"

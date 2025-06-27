@@ -5,8 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Gamepad2, Server, Users, Shield, Headphones, Database, Code } from "lucide-react"
 
-export const dynamic = "force-dynamic"
-
 export default function FiveMPage() {
   const fivemFeatures = [
     {

@@ -1,56 +1,51 @@
-import createMiddleware from "next-intl/middleware"
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { locales, defaultLocale } from "./i18n"
-
-const intlMiddleware = createMiddleware({
-  locales,
-  defaultLocale,
-  localePrefix: "as-needed",
-})
 
 export function middleware(request: NextRequest) {
-  // Handle internationalization first
-  const response = intlMiddleware(request)
-
-  // Then handle authentication for protected paths
+  // Vérifier l'authentification pour les pages protégées
   const protectedPaths = ["/client-area", "/admin"]
   const pathname = request.nextUrl.pathname
 
-  // Remove locale prefix for path checking
-  const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}(?=\/|$)/, "") || "/"
-
-  if (protectedPaths.some((path) => pathWithoutLocale.startsWith(path))) {
+  if (protectedPaths.some((path) => pathname.startsWith(path))) {
     const sessionCookie = request.cookies.get("whmcs_session")
 
     if (!sessionCookie) {
-      const loginUrl = new URL(`/${request.nextUrl.pathname.split("/")[1]}/login`, request.url)
+      // Rediriger vers la page de connexion
+      const loginUrl = new URL("/login", request.url)
       loginUrl.searchParams.set("redirect", pathname)
       return NextResponse.redirect(loginUrl)
     }
 
     try {
+      // Vérifier la validité du cookie de session
       const sessionData = JSON.parse(Buffer.from(sessionCookie.value, "base64").toString())
 
+      // Vérifier l'expiration (optionnel)
       if (sessionData.expiresAt && Date.now() > sessionData.expiresAt) {
-        const redirectResponse = NextResponse.redirect(
-          new URL(`/${request.nextUrl.pathname.split("/")[1]}/login`, request.url),
-        )
-        redirectResponse.cookies.delete("whmcs_session")
-        return redirectResponse
+        const response = NextResponse.redirect(new URL("/login", request.url))
+        response.cookies.delete("whmcs_session")
+        return response
       }
     } catch (error) {
-      const redirectResponse = NextResponse.redirect(
-        new URL(`/${request.nextUrl.pathname.split("/")[1]}/login`, request.url),
-      )
-      redirectResponse.cookies.delete("whmcs_session")
-      return redirectResponse
+      // Cookie invalide, rediriger vers la connexion
+      const response = NextResponse.redirect(new URL("/login", request.url))
+      response.cookies.delete("whmcs_session")
+      return response
     }
   }
 
-  return response
+  return NextResponse.next()
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)"],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 }
