@@ -1,0 +1,69 @@
+# Configuration WHMCS Core
+WHMCS_URL=https://votre-domaine.com/whmcs
+WHMCS_API_IDENTIFIER=votre_api_identifier
+WHMCS_API_SECRET=votre_api_secret
+
+# Base de données WHMCS (optionnel pour accès direct)
+WHMCS_DB_HOST=localhost
+WHMCS_DB_NAME=whmcs_database
+WHMCS_DB_USER=whmcs_user
+WHMCS_DB_PASSWORD=whmcs_password
+
+# Configuration Next.js
+NEXTAUTH_URL=https://votre-domaine.com
+NEXTAUTH_SECRET=votre_secret_nextauth_aleatoire
+
+# Configuration email (pour notifications)
+SMTP_HOST=smtp.votre-domaine.com
+SMTP_PORT=587
+SMTP_USER=noreply@votre-domaine.com
+SMTP_PASSWORD=votre_mot_de_passe_smtp
+SMTP_FROM=noreply@votre-domaine.com
+
+# Configuration des services externes
+GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
+GOOGLE_TAG_MANAGER_ID=GTM-XXXXXXXXX
+FACEBOOK_PIXEL_ID=XXXXXXXXXXXXXXXXX
+TRUSTPILOT_BUSINESS_ID=votre_business_id
+
+# Clés API pour l'analyse de sentiment
+OPENAI_API_KEY=sk-xxxxxxxxxx
+ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxx
+
+# Configuration de sécurité
+JWT_SECRET=votre_jwt_secret_tres_long_et_aleatoire
+ENCRYPTION_KEY=votre_cle_de_chiffrement_32_caracteres
+
+# Configuration des paiements
+STRIPE_PUBLIC_KEY=pk_live_xxxxxxxxxx
+STRIPE_SECRET_KEY=sk_live_xxxxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxx
+PAYPAL_CLIENT_ID=votre_paypal_client_id
+PAYPAL_CLIENT_SECRET=votre_paypal_client_secret
+
+# Configuration de monitoring
+SENTRY_DSN=https://xxxxxxxxxx@sentry.io/xxxxxxxxxx
+SENTRY_ORG=votre_organisation
+SENTRY_PROJECT=votre_projet
+
+# Configuration de base de données
+DATABASE_URL=postgresql://user:password@localhost:5432/database
+REDIS_URL=redis://localhost:6379
+
+# Configuration de stockage
+CLOUDINARY_CLOUD_NAME=votre_cloud_name
+CLOUDINARY_API_KEY=votre_api_key
+CLOUDINARY_API_SECRET=votre_api_secret
+
+# Configuration de chat/support
+CRISP_WEBSITE_ID=votre_website_id
+INTERCOM_APP_ID=votre_app_id
+
+# Configuration des notifications
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/xxx/xxx/xxx
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/xxx/xxx
+
+# Configuration de l'environnement
+NODE_ENV=production
+NEXT_PUBLIC_APP_URL=https://votre-domaine.com
+NEXT_PUBLIC_API_URL=https://votre-domaine.com/api
