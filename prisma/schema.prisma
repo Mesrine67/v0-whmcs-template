@@ -1,0 +1,26 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Utilisez "postgresql" pour Neon ou Supabase
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id @default(cuid())
+  provider          String    // "discourse" ou "discord"
+  providerAccountId String    // L'ID de l'utilisateur chez le fournisseur (ex: Discourse ID, Discord ID)
+  username          String
+  name              String?
+  avatarTemplate    String?
+  isAdmin           Boolean   @default(false)
+  isModerator       Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@unique([provider, providerAccountId]) // Un utilisateur est unique par fournisseur et ID de fournisseur
+}
